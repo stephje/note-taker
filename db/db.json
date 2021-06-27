@@ -1,0 +1,7 @@
+[
+    {
+        "title":"Test Title",
+        "text":"Test text",
+        "id":"something produced by NPM package"
+    }
+]
