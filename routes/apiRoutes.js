@@ -29,7 +29,7 @@ function writeNotesFile(notesArray) {
 //when a get request is sent to /api/notes, respond with the contents of the db.json file as a JSON string
 router.get('/notes', async (req, res) => {
     let notes = await getNotes();
-    res.json(notes);
+    return res.json(notes);
 });
 
 //when a post request is sent to /api/notes, get the content of the db.json file, add the new note, and write the file again
@@ -46,6 +46,8 @@ router.post('/notes', async (req, res) => {
     notesArray.push(newNote);
 
     writeNotesFile(notesArray);
+
+    return res.json(notesArray);
 });
 
 //when a delete request is sent to /api/notes/:id, delete the note with that id
@@ -64,6 +66,8 @@ router.delete('/notes/:id', async function (req, res) {
     notesArray.splice(index, 1);
 
     writeNotesFile(notesArray);
+
+    return res.json(notesArray);
 });
 
 module.exports = router;
