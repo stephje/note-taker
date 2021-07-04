@@ -1,19 +1,30 @@
 const router = require('express').Router();
 const fs = require('fs');
-//promisify fs.readFile so that async and await can be used for this
+//promisify fs.readFile so that async and await can be used
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
-//nanoid is used to generate unique IDs 
+//nanoid is used to generate unique IDs
 const { nanoid } = require('nanoid');
 //prettier is used for formatting
 const prettier = require('prettier');
 
 //read the db.json file, parse it and return it
 async function getNotes() {
-    let notesJSON = await readFile( './db/db.json');
+    let notesJSON = await readFile('./db/db.json');
     let notesArray = JSON.parse(notesJSON);
     return notesArray;
-};
+}
+
+//convert array to JSON string, format with prettier, and write db.json file
+function writeNotesFile(notesArray) {
+    let notes = JSON.stringify(notesArray);
+    notes = prettier.format(notes, { parser: 'json' });
+    fs.writeFile('./db/db.json', notes, (err, data) => {
+        if (err) {
+            console.error(err);
+        }
+    });
+}
 
 //when a get request is sent to /api/notes, respond with the contents of the db.json file as a JSON string
 router.get('/notes', async (req, res) => {
@@ -30,27 +41,29 @@ router.post('/notes', async (req, res) => {
     let id = nanoid();
     newNote.id = id;
 
-    //get aray of existing notes
-    notesArray = await getNotes();
-
-    //push the new note into the array
+    //get aray of existing notes and push the new note onto the array
+    let notesArray = await getNotes();
     notesArray.push(newNote);
 
-    //convert to a JSON string 
-    let notes = JSON.stringify(notesArray);
-
-    //format it as JSON using prettier (this is just to ensure neat formatting in the written db.json file)
-    notes = prettier.format(notes, { parser: 'json' });
-
-    //write db.json file
-    fs.writeFile('./db/db.json', notes, (err, data) => {
-        if (err) {
-            console.error(err);
-        }
-    });
+    writeNotesFile(notesArray);
 });
 
+//when a delete request is sent to /api/notes/:id, delete the note with that id
+router.delete('/notes/:id', async function (req, res) {
+    //get the id from the request
+    let id = req.params.id;
 
+    //get the array of exising notes
+    let notesArray = await getNotes();
 
+    //find the note that needs to be deleted, then find the index of that note
+    let noteToDelete = notesArray.find(note => note.id === id);
+    let index = notesArray.indexOf(noteToDelete);
+
+    //remove the note from the array using the splice array method
+    notesArray.splice(index, 1);
+
+    writeNotesFile(notesArray);
+});
 
 module.exports = router;

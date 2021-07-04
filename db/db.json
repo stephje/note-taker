@@ -1,13 +1,12 @@
 [
   {
-    "title": "Test Title",
-    "text": "Test text",
-    "id": "something produced by NPM package"
+    "title": "Test Note",
+    "text": "This is just a test",
+    "id": "rb_17kn3X8UsOK5GTVbCT"
   },
   {
-    "title": "Test Title 2",
-    "text": "Test text 2 ",
-    "id": "75LWjxy7Olzb9ZeIb8MgN"
-  },
-  { "title": "Test3", "text": "test4", "id": "aMP-Vt4eTFVKT6lUKWWz5" }
+    "title": "Test Two",
+    "text": "This is another test",
+    "id": "wOp0-R7WUTXuyPgWRylZl"
+  }
 ]
