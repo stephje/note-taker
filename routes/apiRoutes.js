@@ -1,28 +1,28 @@
 const router = require('express').Router();
 const fs = require('fs');
+//promisify fs.readFile so that async and await can be used for this
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
+//nanoid is used to generate unique IDs 
 const { nanoid } = require('nanoid');
+//prettier is used for formatting
 const prettier = require('prettier');
 
-//when a get request is sent to /api/notes, respond with the contents of the db.json file as a JSON string
-router.get('/notes', (req, res) => {
-    //read the db.json file
-    fs.readFile('./db/db.json', (err, data) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        //parse data
-        let response = JSON.parse(data);
+//read the db.json file, parse it and return it
+async function getNotes() {
+    let notesJSON = await readFile( './db/db.json');
+    let notesArray = JSON.parse(notesJSON);
+    return notesArray;
+};
 
-        //respond with JSON
-        res.json(response);
-    });
+//when a get request is sent to /api/notes, respond with the contents of the db.json file as a JSON string
+router.get('/notes', async (req, res) => {
+    let notes = await getNotes();
+    res.json(notes);
 });
 
+//when a post request is sent to /api/notes, get the content of the db.json file, add the new note, and write the file again
 router.post('/notes', async (req, res) => {
-
     //get the contents of the new note
     let newNote = req.body;
 
@@ -48,13 +48,9 @@ router.post('/notes', async (req, res) => {
             console.error(err);
         }
     });
-
 });
 
-async function getNotes() {
-    let notesJSON = await readFile( './db/db.json');
-    let notesArray = JSON.parse(notesJSON);
-    return notesArray;
-};
+
+
 
 module.exports = router;
