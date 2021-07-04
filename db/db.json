@@ -1,7 +1,12 @@
 [
-    {
-        "title":"Test Title",
-        "text":"Test text",
-        "id":"something produced by NPM package"
-    }
+  {
+    "title": "Test Title",
+    "text": "Test text",
+    "id": "something produced by NPM package"
+  },
+  {
+    "title": "Test Title 2",
+    "text": "Test text 2 ",
+    "id": "75LWjxy7Olzb9ZeIb8MgN"
+  }
 ]
