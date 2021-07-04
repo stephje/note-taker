@@ -56,5 +56,5 @@ Please ensure that you include the name of this project ("note-taker") in any co
 
 This application has been deployed via Heroku. 
 
-Click [here]() to access the deployed application.
+Click [here](https://rugged-kings-canyon-90464.herokuapp.com/) to access the deployed application.
 
